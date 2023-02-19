@@ -2,10 +2,13 @@
 import { ref } from "vue";
 
 const value = ref("");
-const todos = ref<string[]>([]);
+const todos = ref<{ id: number; value: string }[]>([]);
 
 const onSubmit = () => {
-  todos.value.push(value.value);
+  todos.value.push({
+    id: new Date().getUTCSeconds(),
+    value: value.value,
+  });
   value.value = "";
 };
 </script>
@@ -16,7 +19,11 @@ const onSubmit = () => {
     <button type="submit">제출하기</button>
   </form>
 
-  <div>{{ todos.join() }}</div>
+  <ul>
+    <li v-for="{ id, value } in todos" :key="id">
+      {{ value }}
+    </li>
+  </ul>
 </template>
 
 <style scoped></style>
