@@ -21,6 +21,12 @@ const onSubmit = () => {
   value.value = "";
   errorMessage.value = "";
 };
+
+const removeTodo = (id: number) => {
+  todos.value = todos.value.filter((item) => {
+    return item.id !== id;
+  });
+};
 </script>
 
 <template>
@@ -33,6 +39,7 @@ const onSubmit = () => {
   <ul>
     <li v-for="{ id, value } in todos" :key="id">
       {{ value }}
+      <button type="button" @click="removeTodo(id)">remove</button>
     </li>
   </ul>
 </template>
