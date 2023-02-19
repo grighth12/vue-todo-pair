@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
+type ToDo = { id: number; value: string };
+
 const errorMessage = ref("");
 const value = ref("");
-const todos = ref<{ id: number; value: string }[]>([]);
+const ongoingTodos = ref<ToDo[]>([]);
+const completedTodos = ref<ToDo[]>([]);
 
 const onSubmit = () => {
   const todo = value.value.trim();
@@ -13,8 +16,8 @@ const onSubmit = () => {
     return;
   }
 
-  todos.value.push({
-    id: new Date().getUTCSeconds(),
+  ongoingTodos.value.push({
+    id: new Date().getUTCMilliseconds(),
     value: todo,
   });
 
@@ -23,9 +26,27 @@ const onSubmit = () => {
 };
 
 const removeTodo = (id: number) => {
-  todos.value = todos.value.filter((item) => {
+  ongoingTodos.value = ongoingTodos.value.filter((item) => {
     return item.id !== id;
   });
+};
+
+const moveToCompleted = (id: number) => {
+  const index = ongoingTodos.value.findIndex((item) => item.id === id);
+
+  if (index === -1) return;
+
+  completedTodos.value.push(ongoingTodos.value[index]);
+  ongoingTodos.value.splice(index, 1);
+};
+
+const moveToOngoing = (id: number) => {
+  const index = completedTodos.value.findIndex((item) => item.id === id);
+
+  if (index === -1) return;
+
+  ongoingTodos.value.push(completedTodos.value[index]);
+  completedTodos.value.splice(index, 1);
 };
 </script>
 
@@ -36,12 +57,27 @@ const removeTodo = (id: number) => {
   </form>
   <div class="error">{{ errorMessage }}</div>
 
-  <ul>
-    <li v-for="{ id, value } in todos" :key="id">
-      {{ value }}
-      <button type="button" @click="removeTodo(id)">remove</button>
-    </li>
-  </ul>
+  <article v-if="ongoingTodos.length !== 0">
+    <h2>할 일</h2>
+    <ul>
+      <li v-for="{ id, value } in ongoingTodos" :key="id">
+        <input type="checkbox" :checked="false" @change="moveToCompleted(id)" />
+        {{ value }}
+        <button type="button" @click="removeTodo(id)">remove</button>
+      </li>
+    </ul>
+  </article>
+
+  <article v-if="completedTodos.length !== 0">
+    <h2>완료</h2>
+    <ul>
+      <li v-for="{ id, value } in completedTodos" :key="id">
+        <input type="checkbox" :checked="true" @change="moveToOngoing(id)" />
+        {{ value }}
+        <button type="button" @click="removeTodo(id)">remove</button>
+      </li>
+    </ul>
+  </article>
 </template>
 
 <style scoped>
