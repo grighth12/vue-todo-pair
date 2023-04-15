@@ -53,14 +53,14 @@ const moveToOngoing = (id: number) => {
 
 <template>
   <form @submit.prevent="onSubmit">
-    <input type="text" v-model="value" />
+    <input type="text" aria-label="할 일을 입력하세요." v-model="value" />
     <button type="submit">제출하기</button>
   </form>
   <div class="error">{{ errorMessage }}</div>
 
   <article v-if="ongoingTodos.length !== 0">
     <h2>할 일</h2>
-    <ul>
+    <ul data-testid="todo-list">
       <li v-for="{ id, value } in ongoingTodos" :key="id">
         <input type="checkbox" :checked="false" @change="moveToCompleted(id)" />
         {{ value }}
