@@ -62,8 +62,14 @@ const moveToOngoing = (id: number) => {
     <h2>할 일</h2>
     <ul data-testid="todo-list">
       <li v-for="{ id, value } in ongoingTodos" :key="id">
-        <input type="checkbox" :checked="false" @change="moveToCompleted(id)" />
-        {{ value }}
+        <label>
+          <input
+            type="checkbox"
+            :checked="false"
+            @change="moveToCompleted(id)"
+          />
+          {{ value }}
+        </label>
         <button type="button" @click="removeTodo(id)">remove</button>
       </li>
     </ul>
@@ -71,10 +77,12 @@ const moveToOngoing = (id: number) => {
 
   <article v-if="completedTodos.length !== 0">
     <h2>완료</h2>
-    <ul>
+    <ul data-testid="done-list">
       <li v-for="{ id, value } in completedTodos" :key="id">
-        <input type="checkbox" :checked="true" @change="moveToOngoing(id)" />
-        {{ value }}
+        <label>
+          <input type="checkbox" :checked="true" @change="moveToOngoing(id)" />
+          {{ value }}
+        </label>
         <button type="button" @click="removeTodo(id)">remove</button>
       </li>
     </ul>
