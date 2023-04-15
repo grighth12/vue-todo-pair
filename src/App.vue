@@ -68,9 +68,15 @@ const moveToOngoing = (id: number) => {
             :checked="false"
             @change="moveToCompleted(id)"
           />
-          {{ value }}
-        </label>
-        <button type="button" @click="removeTodo(id)">remove</button>
+          {{ value }}</label
+        >
+        <button
+          type="button"
+          @click="removeTodo(id)"
+          :aria-label="`${value} 삭제`"
+        >
+          remove
+        </button>
       </li>
     </ul>
   </article>
@@ -83,7 +89,13 @@ const moveToOngoing = (id: number) => {
           <input type="checkbox" :checked="true" @change="moveToOngoing(id)" />
           {{ value }}
         </label>
-        <button type="button" @click="removeTodo(id)">remove</button>
+        <button
+          type="button"
+          @click="removeTodo(id)"
+          :aria-label="`${value} 삭제`"
+        >
+          remove
+        </button>
       </li>
     </ul>
   </article>
